@@ -7,8 +7,10 @@
     <title>めしナビ - @yield('title')</title>
     <script src="{{ asset('js/app.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
+    @include('layouts.header')
     <div class="container">
         @yield('content')
     </div>

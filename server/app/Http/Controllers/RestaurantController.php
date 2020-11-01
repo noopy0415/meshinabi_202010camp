@@ -4,12 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Restaurant;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $restaurants = Restaurant::all();
+        $name = $request->name;
+        $category = $request->category;
+
+        $query = Restaurant::query();
+        if($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+        if($category) {
+            $query->where('category', 'like', '%' . $category . '%');
+        }
+        $restaurants = $query->simplePaginate(10);
+        $restaurants->appends(compact('name', 'category'));
+
+        // 検索方法(拡張性が無い)
+        // if(!empty($name)) {
+        //     $restaurants = Restaurant::where('name', 'like', '%' . $name . '%');
+        // } else {
+        //     $restaurants = Restaurant::all();
+        // }
+
+        // $restaurants = Restaurant::simplepaginate(10);
+
+
+        // $restaurants = Restaurant::all()->sortByDesc('recommend');
+        // $restaurants = DB::table('restaurants')
+        //     ->orderByRaw('recommend IS NULL ASC')
+        //     ->orderBy('recommend', 'ASC')
+        //     ->get();
+        // dd($restaurants);
         return view('restaurants.index', compact('restaurants'));
     }
 
